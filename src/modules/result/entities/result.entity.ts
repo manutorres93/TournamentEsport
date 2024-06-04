@@ -1,6 +1,6 @@
 import { Player } from "src/modules/player/entities/player.entity";
 import { Tournament } from "src/modules/tournament/entities/tournament.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'results' })
 export class Result {
@@ -21,4 +21,7 @@ export class Result {
   
     @Column()
     loserScore: number;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }

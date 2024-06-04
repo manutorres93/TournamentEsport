@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { ResultService } from './result.service';
 import { CreateResultDto } from './dto/create-result.dto';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { SearchResultDto } from './dto/search-result.dto';
 
 @ApiTags('results')
 @Controller('result')
@@ -12,6 +13,21 @@ export class ResultController {
   @Post()
   create(@Body() createResultDto: CreateResultDto) {
     return this.resultService.create(createResultDto);
+  }
+
+  @Get('search')
+  async findByParam(@Query() searchResultDto: SearchResultDto) {
+    try {
+      const { searchTerm, orderBy, order, page, pageSize, columnName } = searchResultDto;
+      
+      return await this.resultService.findByParam(searchTerm,orderBy, order,page, pageSize, columnName);
+    } catch (error) {
+
+      throw new BadRequestException('Failed to search athletes', error.message);
+      
+    }
+    
+    
   }
 
   @Get()

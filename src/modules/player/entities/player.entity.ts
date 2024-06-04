@@ -1,5 +1,7 @@
+import { IsOptional } from "class-validator";
+import { Result } from "src/modules/result/entities/result.entity";
 import { Tournament } from "src/modules/tournament/entities/tournament.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'players' })
 export class Player {
@@ -11,7 +13,19 @@ export class Player {
   
     @Column()
     email: string;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
   
-    @ManyToOne(() => Tournament, tournament => tournament.players, {eager:true})
-    tournament: Tournament;
+
+    @ManyToMany(() => Tournament, tournament => tournament.players)
+    @JoinTable()   
+    tournaments: Tournament[];
+
+
+    @OneToMany(()=> Result, (result)=> result.winner)
+    resultWinner: Result[]
+
+    @OneToMany(()=> Result, (result)=> result.loser)
+    resultLoser: Result[]
 }
