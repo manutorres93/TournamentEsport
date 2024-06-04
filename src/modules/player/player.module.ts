@@ -7,7 +7,7 @@ import { TournamentModule } from '../tournament/tournament.module';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Player]), TournamentModule
+    TypeOrmModule.forFeature([Player]), /* TournamentModule */
   ],
   controllers: [PlayerController],
   providers: [PlayerService],

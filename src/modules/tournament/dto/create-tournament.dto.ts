@@ -12,4 +12,7 @@ export class CreateTournamentDto {
   @IsNotEmpty()
   @IsDateString()
   endDate: Date;
+
+  @IsString()
+  playerName: string;
 }

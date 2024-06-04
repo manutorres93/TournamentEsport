@@ -10,8 +10,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class PlayerService {
 
   constructor(
-    @InjectRepository(Tournament)
-    private tournamentRepository: Repository<Tournament>,
+    /* @InjectRepository(Tournament)
+    private tournamentRepository: Repository<Tournament>, */
 
     @InjectRepository(Player)
     private playerRepository: Repository<Player>,
@@ -20,12 +20,13 @@ export class PlayerService {
 
   
   async create(createPlayerDto: CreatePlayerDto) {
-    const tournament = await this.tournamentRepository.findOneBy({name: createPlayerDto.tournamentName});
+    /* const tournament = await this.tournamentRepository.findOneBy({name: createPlayerDto.tournamentName});
     if (!tournament) {
       throw new BadRequestException('Author not found');
-    }
-    const book = this.playerRepository.create({ ...createPlayerDto, tournament });
-    return this.playerRepository.save(book);
+    } */
+    /* const tournament = this.tournamentRepository.create(createTournamentD to); */
+    const player = this.playerRepository.create(createPlayerDto);
+    return this.playerRepository.save(player);
   }
 
   findAll() {

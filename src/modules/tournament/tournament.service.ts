@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,13 +13,18 @@ export class TournamentService {
     @InjectRepository(Tournament)
     private tournamentRepository: Repository<Tournament>,
 
-    /* @InjectRepository(Player)
-    private playerRepository: Repository<Player>, */
+    @InjectRepository(Player)
+    private playerRepository: Repository<Player>,
     
   ) {}
 
   async create(createTournamentDto: CreateTournamentDto): Promise<Tournament> {
+    const player = await this.playerRepository.findOneBy({name: createTournamentDto.playerName});
+    if (!player) {
+      throw new BadRequestException('Player not found');
+    }
     const tournament = this.tournamentRepository.create(createTournamentDto);
+    tournament.players = [player];
     return this.tournamentRepository.save(tournament);
   }
 
