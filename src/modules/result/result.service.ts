@@ -54,15 +54,21 @@ export class ResultService {
     return await this.resultRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} result`;
+  async findOne(id: number) {
+    const result = await this.resultRepository.findOneBy( { id });
+  if (!result) {
+    throw new NotFoundException(`Result with ID ${id} not found`);
+  }
+  return result;
   }
 
-  update(id: number, updateResultDto: UpdateResultDto) {
-    return `This action updates a #${id} result`;
+  async update(id: number, updateResultDto: UpdateResultDto) {
+    const result= await this.resultRepository.findOneBy({id})
+    this.resultRepository.merge(result, updateResultDto)
+    return await this.resultRepository.save(result)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} result`;
+  async remove(id: number) {
+    return await this.resultRepository.softDelete({id})
   }
 }
