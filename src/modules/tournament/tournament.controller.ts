@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { TournamentService } from './tournament.service';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
@@ -13,6 +13,8 @@ export class TournamentController {
   create(@Body() createTournamentDto: CreateTournamentDto) {
     return this.tournamentService.create(createTournamentDto);
   }
+
+
 
   @Get()
   findAll() {

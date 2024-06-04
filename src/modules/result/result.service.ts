@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateResultDto } from './dto/create-result.dto';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Result } from './entities/result.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Tournament } from '../tournament/entities/tournament.entity';
 import { Player } from '../player/entities/player.entity';
 
@@ -48,6 +48,33 @@ export class ResultService {
 
     return await this.resultRepository.save(result);
     
+}
+
+async findByParam(searchTerm: string, orderBy: string,
+  order: 'ASC' | 'DESC',
+  page: number,
+  pageSize: number, columnName: string){
+    try {
+
+      const [result, total] = await this.resultRepository.findAndCount( {
+        where: {
+        [columnName]: ILike(`%${searchTerm}%`)},
+        order: { [orderBy]: order },
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+     },);
+
+     return {
+      data: result,
+      total,
+      page,
+      pageCount: Math.ceil(total / pageSize)
+    };
+      
+    } catch (error) {
+      throw new BadRequestException('Failed to find athletes with provided parameters', error.message);
+      
+    }
 }
 
   async findAll() {
