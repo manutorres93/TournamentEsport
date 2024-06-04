@@ -1,19 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Tournament } from './entities/tournament.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TournamentService {
-  create(createTournamentDto: CreateTournamentDto) {
-    return 'This action adds a new tournament';
+
+  constructor(
+    @InjectRepository(Tournament)
+    private tournamentRepository: Repository<Tournament>,
+  ) {}
+
+  async create(createTournamentDto: CreateTournamentDto): Promise<Tournament> {
+    const tournament = this.tournamentRepository.create(createTournamentDto);
+    return this.tournamentRepository.save(tournament);
   }
 
-  findAll() {
-    return `This action returns all tournament`;
+  async findAll() {
+    return await this.tournamentRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tournament`;
+ async findOne(id: number) {
+  const tournament = await this.tournamentRepository.findOneBy( { id });
+  if (!tournament) {
+    throw new NotFoundException(`Tournament with ID ${id} not found`);
+  }
+  return tournament;
   }
 
   update(id: number, updateTournamentDto: UpdateTournamentDto) {
