@@ -1,11 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { Tournament } from '../tournament/entities/tournament.entity';
+import { Player } from './entities/player.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PlayerService {
-  create(createPlayerDto: CreatePlayerDto) {
-    return 'This action adds a new player';
+
+  constructor(
+    @InjectRepository(Tournament)
+    private tournamentRepository: Repository<Tournament>,
+
+    @InjectRepository(Player)
+    private playerRepository: Repository<Player>,
+    
+  ) {}
+
+  
+  async create(createPlayerDto: CreatePlayerDto) {
+    const tournament = await this.tournamentRepository.findOneBy({name: createPlayerDto.tournamentName});
+    if (!tournament) {
+      throw new BadRequestException('Author not found');
+    }
+    const book = this.playerRepository.create({ ...createPlayerDto, tournament });
+    return this.playerRepository.save(book);
   }
 
   findAll() {

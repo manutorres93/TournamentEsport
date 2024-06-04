@@ -1,5 +1,5 @@
 import { Tournament } from "src/modules/tournament/entities/tournament.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'players' })
 export class Player {
@@ -14,4 +14,7 @@ export class Player {
   
     @ManyToOne(() => Tournament, tournament => tournament.players, {eager:true})
     tournament: Tournament;
+
+    /* @ManyToMany(() => Tournament, tournament => tournament.players)
+    tournaments: Tournament[]; */
 }

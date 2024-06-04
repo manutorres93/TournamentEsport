@@ -4,6 +4,7 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tournament } from './entities/tournament.entity';
 import { Repository } from 'typeorm';
+import { Player } from '../player/entities/player.entity';
 
 @Injectable()
 export class TournamentService {
@@ -11,6 +12,10 @@ export class TournamentService {
   constructor(
     @InjectRepository(Tournament)
     private tournamentRepository: Repository<Tournament>,
+
+    /* @InjectRepository(Player)
+    private playerRepository: Repository<Player>, */
+    
   ) {}
 
   async create(createTournamentDto: CreateTournamentDto): Promise<Tournament> {
