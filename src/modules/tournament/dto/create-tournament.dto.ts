@@ -14,5 +14,5 @@ export class CreateTournamentDto {
   endDate: Date;
 
   @IsString()
-  playerName: string;
+  playerName?: string;
 }

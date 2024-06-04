@@ -64,7 +64,7 @@ export class TournamentService {
     return this.tournamentRepository.save(tournament);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tournament`;
+  async remove(id: number) {
+    return await this.tournamentRepository.softDelete({id})
   }
 }

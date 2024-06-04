@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Tournament } from '../tournament/entities/tournament.entity';
@@ -20,12 +20,18 @@ export class PlayerService {
 
   
   async create(createPlayerDto: CreatePlayerDto) {
-    /* const tournament = await this.tournamentRepository.findOneBy({name: createPlayerDto.tournamentName});
-    if (!tournament) {
-      throw new BadRequestException('Author not found');
-    } */
-    /* const tournament = this.tournamentRepository.create(createTournamentD to); */
+    
     const player = this.playerRepository.create(createPlayerDto);
+
+    /* if (createPlayerDto.tournamentName) {
+      const tournament = await this.tournamentRepository.findOneBy({ name: createPlayerDto.tournamentName });
+      if (!tournament) {
+        throw new BadRequestException('Tournament not found');
+      }
+      player.tournaments = [tournament]; // Associate player with tournament
+    } */
+
+
     return this.playerRepository.save(player);
   }
 
@@ -33,15 +39,21 @@ export class PlayerService {
     return await this.playerRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} player`;
+  async findOne(id: number) {
+    const player = await this.playerRepository.findOneBy( { id });
+  if (!player) {
+    throw new NotFoundException(`Tournament with ID ${id} not found`);
+  }
+  return player;
   }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+  async update(id: number, updatePlayerDto: UpdatePlayerDto) {
+    const player= await this.playerRepository.findOneBy({id})
+    this.playerRepository.merge(player, updatePlayerDto)
+    return await this.playerRepository.save(player)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} player`;
+  async remove(id: number) {
+    return await this.playerRepository.softDelete({id})
   }
 }
