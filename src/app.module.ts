@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import dbConfig from './persistence/db-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TournamentModule } from './modules/tournament/tournament.module';
+import { ResultModule } from './modules/result/result.module';
+import { PlayerModule } from './modules/player/player.module';
 
 
 @Module({
@@ -32,6 +35,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         };
       },
       inject: [dbConfig.KEY],}),
+
+    TournamentModule,
+
+    ResultModule,
+
+    PlayerModule,
   ],
   controllers: [],
   providers: [],
