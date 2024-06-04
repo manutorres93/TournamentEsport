@@ -40,8 +40,28 @@ export class TournamentService {
   return tournament;
   }
 
-  update(id: number, updateTournamentDto: UpdateTournamentDto) {
-    return `This action updates a #${id} tournament`;
+  async update(id: number, updateTournamentDto: UpdateTournamentDto) {
+    const tournament = await this.tournamentRepository.findOneBy({ id });
+  if (!tournament) {
+    throw new NotFoundException(`Tournament with ID ${id} not found`);
+  }
+
+  const updatedTournament = { ...updateTournamentDto };
+
+  if (updateTournamentDto.playerName) {
+    const newPlayers = await this.playerRepository.findOneBy({
+      name: updateTournamentDto.playerName
+    });
+
+    if (!newPlayers) {
+      throw new BadRequestException('Player not found');
+    }
+    tournament.players.push(newPlayers); // Add new players to the existing ones
+  }
+
+  // Update other tournament properties as needed
+
+    return this.tournamentRepository.save(tournament);
   }
 
   remove(id: number) {

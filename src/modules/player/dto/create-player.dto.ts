@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreatePlayerDto {
   @IsNotEmpty()
@@ -10,5 +10,6 @@ export class CreatePlayerDto {
   email: string;
 
   @IsString()
+  @IsOptional()
   tournamentName: string
 }

@@ -1,3 +1,4 @@
+import { IsOptional } from "class-validator";
 import { Tournament } from "src/modules/tournament/entities/tournament.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -20,5 +21,6 @@ export class Player {
 
     @ManyToMany(() => Tournament, tournament => tournament.players)
     @JoinTable()
+    
     tournaments: Tournament[];
 }
