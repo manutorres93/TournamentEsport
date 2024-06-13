@@ -6,6 +6,7 @@ import { TournamentModule } from './modules/tournament/tournament.module';
 import { ResultModule } from './modules/result/result.module';
 import { PlayerModule } from './modules/player/player.module';
 import { PrizeModule } from './modules/prize/prize.module';
+import { AssignedPrizeModule } from './modules/assigned-prize/assigned-prize.module';
 
 
 @Module({
@@ -44,6 +45,8 @@ import { PrizeModule } from './modules/prize/prize.module';
     PlayerModule,
 
     PrizeModule,
+
+    AssignedPrizeModule,
   ],
   controllers: [],
   providers: [],

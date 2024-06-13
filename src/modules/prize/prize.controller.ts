@@ -2,14 +2,21 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PrizeService } from './prize.service';
 import { CreatePrizeDto } from './dto/create-prize.dto';
 import { UpdatePrizeDto } from './dto/update-prize.dto';
+import { CreateAssignedPrizeDto } from '../assigned-prize/dto/create-assigned-prize.dto';
 
 @Controller('prize')
 export class PrizeController {
-  constructor(private readonly prizeService: PrizeService) {}
+  constructor(private readonly prizeService: PrizeService,
+   ) {}
 
   @Post()
   create(@Body() createPrizeDto: CreatePrizeDto) {
     return this.prizeService.create(createPrizeDto);
+  }
+
+  @Get('assign')
+  assign(@Body() assignPrizeDto: CreateAssignedPrizeDto) {
+    return this.prizeService.assignPrize(assignPrizeDto);
   }
 
   @Get()
