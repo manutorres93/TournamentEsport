@@ -7,6 +7,7 @@ import { ResultModule } from './modules/result/result.module';
 import { PlayerModule } from './modules/player/player.module';
 import { PrizeModule } from './modules/prize/prize.module';
 import { AssignedPrizeModule } from './modules/assigned-prize/assigned-prize.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -37,6 +38,8 @@ import { AssignedPrizeModule } from './modules/assigned-prize/assigned-prize.mod
         };
       },
       inject: [dbConfig.KEY],}),
+    
+      ScheduleModule.forRoot(),
 
     TournamentModule,
 

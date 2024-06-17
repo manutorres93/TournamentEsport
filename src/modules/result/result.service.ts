@@ -77,6 +77,61 @@ async findByParam(searchTerm: string, orderBy: string,
     }
 }
 
+async findScores(){
+  const results = await this.resultRepository.find(/* {
+    select: ['id', 'winnerScore', 'loserScore'], // Specify desired properties, no se porque funciona con esto comentado
+  } */);
+
+  const formattedResults = results.map((result) => ({
+    id: result.id,
+    winnerScore: result.winnerScore,
+    loserScore: result.loserScore,
+    winnerName: result.winner.name,
+    loserName: result.loser.name,
+    tournamentName:result.tournament.name,
+  }));
+
+  return formattedResults;
+}
+
+async findScoresByTournament(tournamentName:string){
+  const results = await this.resultRepository.find({
+    where: {tournament:{name:tournamentName}} , // Specify desired properties
+  });
+
+  const formattedResults = results.map((result) => ({
+    id: result.id,
+    winnerScore: result.winnerScore,
+    loserScore: result.loserScore,
+    winnerName: result.winner.name,
+    loserName: result.loser.name,
+    tournamentName:result.tournament.name,
+  }));
+
+  return formattedResults;
+}
+
+async findScoresByTournamentPaginated(tournamentName:string, 
+  page: number, pageSize: number, orderBy: string, order:'ASC' | 'DESC'){
+  const results = await this.resultRepository.find({
+    where: {tournament:{name:tournamentName}} , // Specify desired properties
+    order: { [orderBy]: order },
+    skip:(page - 1) * pageSize , 
+    take:pageSize,
+  });
+
+  const formattedResults = results.map((result) => ({
+    id: result.id,
+    winnerScore: result.winnerScore,
+    loserScore: result.loserScore,
+    winnerName: result.winner.name,
+    loserName: result.loser.name,
+    tournamentName:result.tournament.name,
+  }));
+
+  return formattedResults;
+}
+
   async findAll() {
     return await this.resultRepository.find();
   }

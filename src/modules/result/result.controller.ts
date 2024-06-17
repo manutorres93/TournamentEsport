@@ -30,6 +30,25 @@ export class ResultController {
     
   }
 
+  @Get('scores')
+  findScores() {
+    return this.resultService.findScores();
+  }
+
+  @Get('scoresByTournament')
+  findScoresByTournament(@Query('tournamentName') tournamentName: string) {
+    return this.resultService.findScoresByTournament(tournamentName);
+  }
+
+  @Get('scoresByTournamentPaginated')
+  findScoresByTournamentPaginated(@Query('tournamentName') tournamentName: string,
+  @Query('page') page: number, 
+  @Query('pageSize') pageSize:number,
+  @Query('orderBy') orderBy: string,
+  @Query('order') order:'ASC' | 'DESC' = 'ASC') {
+    return this.resultService.findScoresByTournamentPaginated(tournamentName, page, pageSize, orderBy,order);
+  }
+
   @Get()
   findAll() {
     return this.resultService.findAll();

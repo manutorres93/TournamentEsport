@@ -15,8 +15,8 @@ export class PrizeService {
     private prizeRepository: Repository<Prize>,
     @InjectRepository(Player)
     private playerRepository: Repository<Player>,
-    /* @InjectRepository(AssignedPrize)
-    private assignedPrizeRepository: Repository<AssignedPrize>, */
+    @InjectRepository(AssignedPrize)
+    private assignedPrizeRepository: Repository<AssignedPrize>,
   ) {}
 
   async create(createPrizeDto: CreatePrizeDto): Promise<Prize> {
@@ -30,20 +30,52 @@ export class PrizeService {
       throw new NotFoundException(`Player with ID ${assignPrizeDto.playerId} not found`);
     }
 
-   /*  const prize = this.prizeRepository.findOneBy({id : assignPrizeDto.prizeId});
+    const prize =await this.prizeRepository.findOneBy({id : assignPrizeDto.prizeId});
     if (!prize) {
       throw new NotFoundException('No prizes available');
-    } */
+    }
 
-   /*  prize.quantity -= 1;
-    await this.prizeRepository.save(prize); */
+    if (prize.quantity<=0) {
+      throw new NotFoundException('There is no prize available');
+    }
 
-    /* const assignment = this.prizeAssignmentRepository.create({ player, prize });
-    await this.prizeAssignmentRepository.save(assignment); */
 
-   /*  return { player, prize }; */
+    console.log(prize);
+    
 
-   return player
+    prize.quantity -= 1;
+
+    const prizeAssignated = prize.name
+    console.log(prize.quantity);
+    
+    await this.prizeRepository.save(prize);
+
+    const assignment = this.assignedPrizeRepository.create({ player, prize: prizeAssignated, 
+      prizeQuantity: 1});
+    
+
+    return await this.assignedPrizeRepository.save(assignment);
+
+   
+  }
+
+  async assignDailyPrizes() {
+    const players = await this.playerRepository.find();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (const player of players) {
+      const assignmentCount = await this.assignedPrizeRepository.count({
+        where: {
+          player,
+          assignedAt: today,
+        },
+      });
+
+      if (assignmentCount === 0) {
+        await this.assignPrize({ playerId: player.id, prizeId: null });
+      }
+    }
   }
 
   async findAll() {

@@ -10,8 +10,13 @@ export class AssignedPrize {
     @ManyToOne(() => Player, { eager: true })
     player: Player;
   
-    @ManyToOne(() => Prize, { eager: true })
-    prize: Prize;
+    //@ManyToOne(() => Prize, { eager: true })
+    @Column()
+    //prize: Prize;
+    prize: string
+
+    @Column()
+    prizeQuantity: number;
   
     @CreateDateColumn()
     assignedAt: Date;

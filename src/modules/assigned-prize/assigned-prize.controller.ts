@@ -12,6 +12,12 @@ export class AssignedPrizeController {
     return this.assignedPrizeService.create(createAssignedPrizeDto);
   }
 
+  @Post('assign-daily')
+  async assignDailyPrizes() {
+    await this.assignedPrizeService.assignPrizesAutomatically();
+    return { message: 'Daily prizes assigned successfully' };
+  }
+
   @Get()
   findAll() {
     return this.assignedPrizeService.findAll();
