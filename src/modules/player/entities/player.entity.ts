@@ -19,7 +19,7 @@ export class Player {
   
 
     @ManyToMany(() => Tournament, tournament => tournament.players)
-    @JoinTable()   
+    //@JoinTable()  //tal vez funciona sin esto 
     tournaments: Tournament[];
 
 

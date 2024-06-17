@@ -3,8 +3,9 @@ import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Tournament } from '../tournament/entities/tournament.entity';
 import { Player } from './entities/player.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { log } from 'console';
 
 @Injectable()
 export class PlayerService {
@@ -37,6 +38,65 @@ export class PlayerService {
 
   async findAll() {
     return await this.playerRepository.find();
+  }
+
+  async findByName(playerName: string) {
+
+    const player = await this.playerRepository.find( {where: {name: playerName}} )    
+    
+    return player
+  }
+
+
+  async findByNameIlike(playerName: string) {
+
+    const player = await this.playerRepository.find( {where: {name:  ILike(`%${playerName}%`)}} )    
+    
+    return player
+  }
+
+  async findByTermColumn(playerName: string, columnName: string){
+
+    const player = await this.playerRepository.find( {where: {[columnName]:  ILike(`%${playerName}%`)}} )    
+    
+    return player
+  }
+
+  async findAllPaginated(page: number, pageSize: number, orderBy: string, order:'ASC' | 'DESC'){
+
+    const player = await this.playerRepository.find({ 
+      order: { [orderBy]: order },
+      skip:(page - 1) * pageSize , 
+      take:pageSize,
+    },
+      
+      
+      )    
+    
+    return player
+  }
+
+  async findByTermPaginated(searchTerm: string,columnName: string,
+    page: number, pageSize: number, 
+    orderBy: string, order:'ASC' | 'DESC'){
+
+      const [result, total] = await this.playerRepository.findAndCount({
+      where: {
+        [columnName]: ILike(`%${searchTerm}%`)}, 
+      order: { [orderBy]: order },
+      take:pageSize,
+      skip:(page - 1) * pageSize , 
+    },
+      
+      
+      )    
+    
+      return {
+        data: result,
+        total,
+        page,
+        pageCount: Math.ceil(total / pageSize)
+      };
   }
 
   async findOne(id: number) {

@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TournamentModule } from './modules/tournament/tournament.module';
 import { ResultModule } from './modules/result/result.module';
 import { PlayerModule } from './modules/player/player.module';
+import { PrizeModule } from './modules/prize/prize.module';
+import { AssignedPrizeModule } from './modules/assigned-prize/assigned-prize.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -35,12 +38,18 @@ import { PlayerModule } from './modules/player/player.module';
         };
       },
       inject: [dbConfig.KEY],}),
+    
+      ScheduleModule.forRoot(),
 
     TournamentModule,
 
     ResultModule,
 
     PlayerModule,
+
+    PrizeModule,
+
+    AssignedPrizeModule,
   ],
   controllers: [],
   providers: [],

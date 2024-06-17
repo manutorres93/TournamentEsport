@@ -69,4 +69,27 @@ export class TournamentService {
   async remove(id: number) {
     return await this.tournamentRepository.softDelete({id})
   }
+
+  async createRandomMatch(tournamentId: number) {
+    const tournament = await this.tournamentRepository.findOne({
+      where: { id: tournamentId },
+      relations: ['players'],
+    });
+
+    if (!tournament) {
+      throw new NotFoundException(`Tournament with ID ${tournamentId} not found`);
+    }
+
+    const players = tournament.players;
+
+    if (players.length < 2) {
+      throw new BadRequestException('Not enough players to create a match');
+    }
+
+    const shuffledPlayers = players.sort(() => 0.5 - Math.random());
+    const [player1, player2] = shuffledPlayers.slice(0, 2);
+
+   
+    return {player1,player2}
+  }
 }
